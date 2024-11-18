@@ -1,5 +1,7 @@
 # Answers
 
+## 1 - Environnement
+
 ## Exercice 1
 
 ### Les targets
@@ -23,3 +25,11 @@ Le simulateur permet de tester l'application sur un appareil virtuel (comme un i
 - Cmd + Shift + O : Recherche un fichier.
 - Indenter automatiquement : Ctrl + I.
 - Commenter la sélection : Cmd + /.
+
+## 1 - Délégation
+
+## Exercice 1
+
+Une propriété statique partage une valeur entre toutes les instances d'une classe.
+
+
