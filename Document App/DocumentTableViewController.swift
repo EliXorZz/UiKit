@@ -19,16 +19,11 @@ extension Int {
 class DocumentTableViewController: UITableViewController {
     struct DocumentFile {
         static var documents = [
-            DocumentFile(title: "Document 1", size: 100, imageName: nil, url: URL(string: "https://www.apple.com")!, type: "text/plain"),
-            DocumentFile(title: "Document 2", size: 200, imageName: nil, url: URL(string: "https://www.apple.com")!, type: "text/plain"),
-            DocumentFile(title: "Document 3", size: 300, imageName: nil, url: URL(string: "https://www.apple.com")!, type: "text/plain"),
-            DocumentFile(title: "Document 4", size: 400, imageName: nil, url: URL(string: "https://www.apple.com")!, type: "text/plain"),
-            DocumentFile(title: "Document 5", size: 500, imageName: nil, url: URL(string: "https://www.apple.com")!, type: "text/plain"),
-            DocumentFile(title: "Document 6", size: 600, imageName: nil, url: URL(string: "https://www.apple.com")!, type: "text/plain"),
-            DocumentFile(title: "Document 7", size: 700, imageName: nil, url: URL(string: "https://www.apple.com")!, type: "text/plain"),
-            DocumentFile(title: "Document 8", size: 800, imageName: nil, url: URL(string: "https://www.apple.com")!, type: "text/plain"),
-            DocumentFile(title: "Document 9", size: 900, imageName: nil, url: URL(string: "https://www.apple.com")!, type: "text/plain"),
-            DocumentFile(title: "Document 10", size: 1000, imageName: nil, url: URL(string: "https://www.apple.com")!, type: "text/plain")
+            DocumentFile(title: "image-1.jpg", size: 1655939, imageName: Optional("image-1.jpg"), url: URL(fileURLWithPath: "/Users/battigd/Library/Developer/CoreSimulator/Devices/26B84220-28F8-48D8-974A-B1E80113299C/data/Containers/Bundle/Application/DAF176F1-3292-4A99-B328-07AB338B9D94/Document%20App.app/image-1.jpg"), type: "public.jpeg"),
+            
+            DocumentFile(title: "image-2.jpg", size: 2554657, imageName: Optional("image-2.jpg"), url: URL(fileURLWithPath: "/Users/battigd/Library/Developer/CoreSimulator/Devices/26B84220-28F8-48D8-974A-B1E80113299C/data/Containers/Bundle/Application/DAF176F1-3292-4A99-B328-07AB338B9D94/Document%20App.app/image-2.jpg"), type: "public.jpeg"),
+            
+            DocumentFile(title: "image-3.jpg", size: 773954, imageName: Optional("image-3.jpg"), url: URL(fileURLWithPath: "/Users/battigd/Library/Developer/CoreSimulator/Devices/26B84220-28F8-48D8-974A-B1E80113299C/data/Containers/Bundle/Application/DAF176F1-3292-4A99-B328-07AB338B9D94/Document%20App.app/image-3.jpg"), type: "public.jpeg"),
         ]
         
         var title: String
@@ -49,7 +44,7 @@ class DocumentTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return DocumentFile.documents.count
+        return listFileInBundle().count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -58,7 +53,31 @@ class DocumentTableViewController: UITableViewController {
         
         cell.textLabel?.text = document.title
         cell.detailTextLabel?.text = document.size.formattedSize()
-
+    
         return cell
+    }
+    
+    func listFileInBundle() -> [DocumentFile] {  // Fonction retournant une liste de DocumentFile
+        let fm = FileManager.default  // Instance FileManager
+        let path = Bundle.main.resourcePath!  // Chemin du bundle
+        let items = try! fm.contentsOfDirectory(atPath: path)  // Liste des fichiers du bundle
+        
+        var documentListBundle = [DocumentFile]()  // Liste vide pour stocker les fichiers
+        
+        for item in items {  // Parcourt les fichiers
+            if !item.hasSuffix("DS_Store") && item.hasSuffix(".jpg") {  // Filtre les fichiers .jpg
+                let currentUrl = URL(fileURLWithPath: path + "/" + item)  // Crée l'URL du fichier
+                let resourcesValues = try! currentUrl.resourceValues(forKeys: [.contentTypeKey, .nameKey, .fileSizeKey])  // Récupère infos sur le fichier
+                
+                documentListBundle.append(DocumentFile(  // Ajoute un DocumentFile à la liste
+                    title: resourcesValues.name!,  // Nom du fichier
+                    size: resourcesValues.fileSize ?? 0,  // Taille du fichier
+                    imageName: item,  // Nom du fichier
+                    url: currentUrl,  // URL du fichier
+                    type: resourcesValues.contentType!.description  // Type MIME
+                ))
+            }
+        }
+        return documentListBundle  // Retourne la liste des fichiers
     }
 }

@@ -26,10 +26,26 @@ Le simulateur permet de tester l'application sur un appareil virtuel (comme un i
 - Indenter automatiquement : Ctrl + I.
 - Commenter la sélection : Cmd + /.
 
-## 2 - Délégation
+## 3 - Délégation
 
 ## Exercice 1
 
 Une propriété statique partage une valeur entre toutes les instances d'une classe.
 
+## 4 - Navigation
 
+## Exercice 1
+
+On vient de configurer un NavigationController, qui gère la navigation entre les vues en les empilant et dépilant.
+
+Le NavigationController gère la logique de navigation, tandis que la NavigationBar est l'élément visuel en haut de l'écran (titre, boutons).
+
+## 6 - Ecran Detail
+
+## Exercice 1
+
+Un Segue permet de naviguer d'un écran à un autre dans une app iOS.
+
+## Exercice 2
+
+Une constraint est une règle qui détermine la position et la taille des éléments sur l'écran. Elle sert à créer des interfaces flexibles avec AutoLayout, pour que l'UI s'adapte à différentes tailles d'écran.
