@@ -26,7 +26,7 @@ Le simulateur permet de tester l'application sur un appareil virtuel (comme un i
 - Indenter automatiquement : Ctrl + I.
 - Commenter la sélection : Cmd + /.
 
-## 1 - Délégation
+## 2 - Délégation
 
 ## Exercice 1
 
