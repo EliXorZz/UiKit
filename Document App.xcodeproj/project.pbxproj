@@ -13,6 +13,7 @@
 		88F78FD92CEB24E000D930E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88F78FD72CEB24E000D930E0 /* Main.storyboard */; };
 		88F78FDB2CEB24E200D930E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88F78FDA2CEB24E200D930E0 /* Assets.xcassets */; };
 		88F78FDE2CEB24E200D930E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88F78FDC2CEB24E200D930E0 /* LaunchScreen.storyboard */; };
+		88F78FEC2CEB314500D930E0 /* DocumentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F78FEB2CEB314400D930E0 /* DocumentTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		88F78FDF2CEB24E200D930E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		88F78FE52CEB285B00D930E0 /* Answers.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Answers.md; sourceTree = "<group>"; };
 		88F78FE62CEB288700D930E0 /* Notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
+		88F78FEB2CEB314400D930E0 /* DocumentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				88F78FDA2CEB24E200D930E0 /* Assets.xcassets */,
 				88F78FDC2CEB24E200D930E0 /* LaunchScreen.storyboard */,
 				88F78FDF2CEB24E200D930E0 /* Info.plist */,
+				88F78FEB2CEB314400D930E0 /* DocumentTableViewController.swift */,
 			);
 			path = "Document App";
 			sourceTree = "<group>";
@@ -144,6 +147,7 @@
 			files = (
 				88F78FD62CEB24E000D930E0 /* ViewController.swift in Sources */,
 				88F78FD22CEB24E000D930E0 /* AppDelegate.swift in Sources */,
+				88F78FEC2CEB314500D930E0 /* DocumentTableViewController.swift in Sources */,
 				88F78FD42CEB24E000D930E0 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
