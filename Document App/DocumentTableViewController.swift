@@ -44,9 +44,9 @@ class DocumentTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listFileInBundle().count
+        return DocumentFile.documents.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DocumentCell", for: indexPath)
         let document = DocumentFile.documents[indexPath.row]
@@ -55,6 +55,15 @@ class DocumentTableViewController: UITableViewController {
         cell.detailTextLabel?.text = document.size.formattedSize()
     
         return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? DocumentViewController {
+            let index = tableView.indexPathForSelectedRow!.row
+            let document = DocumentFile.documents[index]
+            
+            destination.imageName = document.imageName
+        }
     }
     
     func listFileInBundle() -> [DocumentFile] {  // Fonction retournant une liste de DocumentFile
