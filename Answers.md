@@ -53,3 +53,22 @@ Une constraint est une règle qui détermine la position et la taille des élém
 ## 9 - QLPreview
 
 Changer l'accessory pour un disclosureIndicator rend l'interface plus claire, plus cohérente avec les conventions de la plateforme, et indique facilement à l'utilisateur qu'il peut interagir avec l'élément.
+
+## 10 - Importation
+
+selector en Swift permet de référencer une méthode à appeler lors d'un événement, comme un clic sur un bouton.
+
+.add correspond à une valuer de l'enumération requise en paramètre.
+
+@objc est nécessaire pour rendre la méthode compatible avec le runtime Objective-C, requis pour le #selector.
+
+Oui, on peut ajouter plusieurs boutons dans la barre de navigation en utilisant navigationItem.rightBarButtonItems et en lui assigant un tableau de UIBarButtonItem par exemple.
+
+```swift
+let button1 = UIBarButtonItem(title: "Button 1", style: .plain, target: self, action: #selector(button1Tapped))
+let button2 = UIBarButtonItem(title: "Button 2", style: .plain, target: self, action: #selector(button2Tapped))
+
+navigationItem.rightBarButtonItems = [button1, button2]
+```
+
+Defer permet d'executer le code à l'interieur du block à la fin de la methode.

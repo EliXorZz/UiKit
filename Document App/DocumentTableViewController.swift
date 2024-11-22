@@ -36,11 +36,15 @@ class DocumentTableViewController: UITableViewController {
         var type: String
     }
     
+    var importedDocuments: [DocumentFile] = []
     var documents: [DocumentFile] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.documents = self.listFileInBundle()
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addDocument))
+        
+        self.loadFiles()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -64,6 +68,20 @@ class DocumentTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let file = documents[indexPath.row]
         self.instantiateQLPreviewController(withUrl: file.url)
+    }
+    
+    @objc func addDocument() {
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.item])
+        
+        documentPicker.delegate = self
+        documentPicker.modalPresentationStyle = .overFullScreen
+        
+        present(documentPicker, animated: true)
+    }
+    
+    func loadFiles() {
+        self.importedDocuments = self.listFileInDocumentsDirectory()
+        self.documents = self.listFileInBundle() + self.listFileInDocumentsDirectory()
     }
     
     func instantiateQLPreviewController(withUrl url: URL) {
@@ -98,6 +116,33 @@ class DocumentTableViewController: UITableViewController {
         }
         return documentListBundle  // Retourne la liste des fichiers
     }
+    
+    func listFileInDocumentsDirectory() -> [DocumentFile] {
+        var documents = [DocumentFile]()
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        do {
+            let path = documentsDirectory.path
+            let files = try FileManager.default.contentsOfDirectory(atPath: path)
+            
+            for file in files {
+                let currentUrl = URL(fileURLWithPath: path + "/" + file)
+                let resourcesValues = try! currentUrl.resourceValues(forKeys: [.contentTypeKey, .nameKey, .fileSizeKey])
+                
+                documents.append(DocumentFile(
+                    title: resourcesValues.name!,
+                    size: resourcesValues.fileSize ?? 0,
+                    imageName: file,
+                    url: currentUrl,
+                    type: resourcesValues.contentType!.description
+                ))
+            }
+        } catch {
+            print(error)
+        }
+        
+        return documents
+    }
 }
 
 extension DocumentTableViewController: QLPreviewControllerDataSource {
@@ -108,5 +153,39 @@ extension DocumentTableViewController: QLPreviewControllerDataSource {
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
         let document = documents[index]
         return document.url as QLPreviewItem
+    }
+}
+
+extension DocumentTableViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        dismiss(animated: true)
+
+        guard url.startAccessingSecurityScopedResource() else {
+            return
+        }
+
+        defer {
+            url.stopAccessingSecurityScopedResource()
+        }
+
+        self.copyFileToDocumentsDirectory(fromUrl: url)
+        
+        self.loadFiles()
+        self.tableView.reloadData()
+    }
+
+    func copyFileToDocumentsDirectory(fromUrl url: URL) {
+        // On récupère le dossier de l'application, dossier où nous avons le droit d'écrire nos fichiers
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        // Nous créons une URL de destination pour le fichier
+        let destinationUrl = documentsDirectory.appendingPathComponent(url.lastPathComponent)
+        
+        do {
+            // Puis nous copions le fichier depuis l'URL source vers l'URL de destination
+            try FileManager.default.copyItem(at: url, to: destinationUrl)
+        } catch {
+            print(error)
+        }
     }
 }
