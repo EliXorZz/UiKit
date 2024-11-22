@@ -39,6 +39,8 @@ class DocumentTableViewController: UITableViewController {
     var importedDocuments: [DocumentFile] = []
     var documents: [DocumentFile] = []
     
+    var current: [DocumentFile] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,25 +50,61 @@ class DocumentTableViewController: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return "Importations"
+        case 1:
+            return "Bundles"
+        default:
+            return nil
+        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return documents.count
+        switch section {
+        case 0:
+            return importedDocuments.count
+        case 1:
+            return documents.count
+        default:
+            return 0
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DocumentCell", for: indexPath)
-        let document = documents[indexPath.row]
+        var document: DocumentFile?
         
-        cell.textLabel?.text = document.title
-        cell.detailTextLabel?.text = document.size.formattedSize()
-    
+        switch indexPath.section {
+        case 0:
+            document = self.importedDocuments[indexPath.row]
+        case 1:
+            document = self.documents[indexPath.row]
+        default:
+            break
+        }
+        
+        cell.textLabel?.text = document?.title
+        cell.detailTextLabel?.text = document?.size.formattedSize()
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let file = documents[indexPath.row]
+        switch indexPath.section {
+        case 0:
+            self.current = self.importedDocuments
+        case 1:
+            self.current = self.documents
+        default:
+            break
+        }
+        
+        let file = self.current[indexPath.row]
         self.instantiateQLPreviewController(withUrl: file.url)
     }
     
@@ -81,14 +119,14 @@ class DocumentTableViewController: UITableViewController {
     
     func loadFiles() {
         self.importedDocuments = self.listFileInDocumentsDirectory()
-        self.documents = self.listFileInBundle() + self.listFileInDocumentsDirectory()
+        self.documents = self.listFileInBundle()
     }
     
     func instantiateQLPreviewController(withUrl url: URL) {
         let previewController = QLPreviewController()
         
         previewController.dataSource = self
-        previewController.currentPreviewItemIndex = documents.firstIndex{ $0.url == url }!
+        previewController.currentPreviewItemIndex = self.current.firstIndex{ $0.url == url }!
         
         self.present(previewController, animated: true)
     }
@@ -147,18 +185,18 @@ class DocumentTableViewController: UITableViewController {
 
 extension DocumentTableViewController: QLPreviewControllerDataSource {
     func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-        return documents.count
+        return current.count
     }
     
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-        let document = documents[index]
+        let document = self.current[index]
         return document.url as QLPreviewItem
     }
 }
 
 extension DocumentTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        dismiss(animated: true)
+        self.dismiss(animated: true)
 
         guard url.startAccessingSecurityScopedResource() else {
             return
