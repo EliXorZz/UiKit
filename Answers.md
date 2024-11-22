@@ -49,3 +49,7 @@ Un Segue permet de naviguer d'un écran à un autre dans une app iOS.
 ## Exercice 2
 
 Une constraint est une règle qui détermine la position et la taille des éléments sur l'écran. Elle sert à créer des interfaces flexibles avec AutoLayout, pour que l'UI s'adapte à différentes tailles d'écran.
+
+## 9 - QLPreview
+
+Changer l'accessory pour un disclosureIndicator rend l'interface plus claire, plus cohérente avec les conventions de la plateforme, et indique facilement à l'utilisateur qu'il peut interagir avec l'élément.
