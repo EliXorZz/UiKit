@@ -18,6 +18,8 @@ extension Int {
 }
 
 class DocumentTableViewController: UITableViewController {
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     struct DocumentFile {
         static var documents = [
             DocumentFile(title: "image-1.jpg", size: 1655939, imageName: Optional("image-1.jpg"), url: URL(fileURLWithPath: "file:///Users/battigd/Library/Developer/CoreSimulator/Devices/26B84220-28F8-48D8-974A-B1E80113299C/data/Containers/Bundle/Application/007B5D5A-DB55-435D-A0B7-37341CBE7AAB/Document%20App.app/image-1.jpg"), type: "public.jpeg"),
@@ -39,12 +41,16 @@ class DocumentTableViewController: UITableViewController {
     var importedDocuments: [DocumentFile] = []
     var documents: [DocumentFile] = []
     
+    var filteredImportedDocuments: [DocumentFile] = []
+    var filteredDocuments: [DocumentFile] = []
+    
     var current: [DocumentFile] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addDocument))
+        self.searchBar.delegate = self
         
         self.loadFiles()
     }
@@ -67,9 +73,9 @@ class DocumentTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return importedDocuments.count
+            return filteredImportedDocuments.count
         case 1:
-            return documents.count
+            return filteredDocuments.count
         default:
             return 0
         }
@@ -81,9 +87,9 @@ class DocumentTableViewController: UITableViewController {
         
         switch indexPath.section {
         case 0:
-            document = self.importedDocuments[indexPath.row]
+            document = self.filteredImportedDocuments[indexPath.row]
         case 1:
-            document = self.documents[indexPath.row]
+            document = self.filteredDocuments[indexPath.row]
         default:
             break
         }
@@ -97,9 +103,9 @@ class DocumentTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
-            self.current = self.importedDocuments
+            self.current = self.filteredImportedDocuments
         case 1:
-            self.current = self.documents
+            self.current = self.filteredDocuments
         default:
             break
         }
@@ -120,6 +126,9 @@ class DocumentTableViewController: UITableViewController {
     func loadFiles() {
         self.importedDocuments = self.listFileInDocumentsDirectory()
         self.documents = self.listFileInBundle()
+        
+        self.filteredImportedDocuments = self.importedDocuments
+        self.filteredDocuments = self.documents
     }
     
     func instantiateQLPreviewController(withUrl url: URL) {
@@ -225,5 +234,24 @@ extension DocumentTableViewController: UIDocumentPickerDelegate {
         } catch {
             print(error)
         }
+    }
+}
+
+extension DocumentTableViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if (!searchText.isEmpty) {
+            self.filteredDocuments = self.documents.filter { (item: DocumentFile) -> Bool in
+                return item.title.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+            }
+            
+            self.filteredImportedDocuments = self.importedDocuments.filter { (item: DocumentFile) -> Bool in
+                return item.title.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+            }
+        }else {
+            self.filteredDocuments = self.documents
+            self.filteredImportedDocuments = self.importedDocuments
+        }
+        
+        self.tableView.reloadData()
     }
 }
