@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		88C9332E2CEB6A3400CD09E4 /* DocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C9332D2CEB6A3400CD09E4 /* DocumentViewController.swift */; };
 		88F78FD22CEB24E000D930E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F78FD12CEB24E000D930E0 /* AppDelegate.swift */; };
 		88F78FD42CEB24E000D930E0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F78FD32CEB24E000D930E0 /* SceneDelegate.swift */; };
 		88F78FD62CEB24E000D930E0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F78FD52CEB24E000D930E0 /* ViewController.swift */; };
@@ -21,7 +20,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		88C9332D2CEB6A3400CD09E4 /* DocumentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentViewController.swift; sourceTree = "<group>"; };
 		88F78FCE2CEB24E000D930E0 /* Document App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Document App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		88F78FD12CEB24E000D930E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		88F78FD32CEB24E000D930E0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -77,7 +75,6 @@
 				88F78FD32CEB24E000D930E0 /* SceneDelegate.swift */,
 				88F78FD52CEB24E000D930E0 /* ViewController.swift */,
 				88F78FD72CEB24E000D930E0 /* Main.storyboard */,
-				88C9332D2CEB6A3400CD09E4 /* DocumentViewController.swift */,
 				88F78FDA2CEB24E200D930E0 /* Assets.xcassets */,
 				88F78FDC2CEB24E200D930E0 /* LaunchScreen.storyboard */,
 				88F78FDF2CEB24E200D930E0 /* Info.plist */,
@@ -160,7 +157,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88C9332E2CEB6A3400CD09E4 /* DocumentViewController.swift in Sources */,
 				88F78FD62CEB24E000D930E0 /* ViewController.swift in Sources */,
 				88F78FD22CEB24E000D930E0 /* AppDelegate.swift in Sources */,
 				88F78FEC2CEB314500D930E0 /* DocumentTableViewController.swift in Sources */,

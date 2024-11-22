@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import QuickLook
 
 extension Int {
     func formattedSize() -> String {
@@ -19,11 +20,11 @@ extension Int {
 class DocumentTableViewController: UITableViewController {
     struct DocumentFile {
         static var documents = [
-            DocumentFile(title: "image-1.jpg", size: 1655939, imageName: Optional("image-1.jpg"), url: URL(fileURLWithPath: "/Users/battigd/Library/Developer/CoreSimulator/Devices/26B84220-28F8-48D8-974A-B1E80113299C/data/Containers/Bundle/Application/DAF176F1-3292-4A99-B328-07AB338B9D94/Document%20App.app/image-1.jpg"), type: "public.jpeg"),
+            DocumentFile(title: "image-1.jpg", size: 1655939, imageName: Optional("image-1.jpg"), url: URL(fileURLWithPath: "file:///Users/battigd/Library/Developer/CoreSimulator/Devices/26B84220-28F8-48D8-974A-B1E80113299C/data/Containers/Bundle/Application/007B5D5A-DB55-435D-A0B7-37341CBE7AAB/Document%20App.app/image-1.jpg"), type: "public.jpeg"),
             
-            DocumentFile(title: "image-2.jpg", size: 2554657, imageName: Optional("image-2.jpg"), url: URL(fileURLWithPath: "/Users/battigd/Library/Developer/CoreSimulator/Devices/26B84220-28F8-48D8-974A-B1E80113299C/data/Containers/Bundle/Application/DAF176F1-3292-4A99-B328-07AB338B9D94/Document%20App.app/image-2.jpg"), type: "public.jpeg"),
+            DocumentFile(title: "image-2.jpg", size: 2554657, imageName: Optional("image-2.jpg"), url: URL(fileURLWithPath: "file:///Users/battigd/Library/Developer/CoreSimulator/Devices/26B84220-28F8-48D8-974A-B1E80113299C/data/Containers/Bundle/Application/3D2CB84A-9A59-4ADE-8AC8-0D6A43ADD54F/Document%20App.app/image-2.jpg"), type: "public.jpeg"),
             
-            DocumentFile(title: "image-3.jpg", size: 773954, imageName: Optional("image-3.jpg"), url: URL(fileURLWithPath: "/Users/battigd/Library/Developer/CoreSimulator/Devices/26B84220-28F8-48D8-974A-B1E80113299C/data/Containers/Bundle/Application/DAF176F1-3292-4A99-B328-07AB338B9D94/Document%20App.app/image-3.jpg"), type: "public.jpeg"),
+            DocumentFile(title: "image-3.jpg", size: 773954, imageName: Optional("image-3.jpg"), url: URL(fileURLWithPath: "file:///Users/battigd/Library/Developer/CoreSimulator/Devices/26B84220-28F8-48D8-974A-B1E80113299C/data/Containers/Bundle/Application/007B5D5A-DB55-435D-A0B7-37341CBE7AAB/Document%20App.app/image-3.jpg"), type: "public.jpeg"),
         ]
         
         var title: String
@@ -35,21 +36,24 @@ class DocumentTableViewController: UITableViewController {
         var type: String
     }
     
+    var documents: [DocumentFile] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.documents = self.listFileInBundle()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return DocumentFile.documents.count
+        return documents.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DocumentCell", for: indexPath)
-        let document = DocumentFile.documents[indexPath.row]
+        let document = documents[indexPath.row]
         
         cell.textLabel?.text = document.title
         cell.detailTextLabel?.text = document.size.formattedSize()
@@ -57,13 +61,18 @@ class DocumentTableViewController: UITableViewController {
         return cell
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destination = segue.destination as? DocumentViewController {
-            let index = tableView.indexPathForSelectedRow!.row
-            let document = DocumentFile.documents[index]
-            
-            destination.imageName = document.imageName
-        }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let file = documents[indexPath.row]
+        self.instantiateQLPreviewController(withUrl: file.url)
+    }
+    
+    func instantiateQLPreviewController(withUrl url: URL) {
+        let previewController = QLPreviewController()
+        
+        previewController.dataSource = self
+        previewController.currentPreviewItemIndex = documents.firstIndex{ $0.url == url }!
+        
+        self.present(previewController, animated: true)
     }
     
     func listFileInBundle() -> [DocumentFile] {  // Fonction retournant une liste de DocumentFile
@@ -88,5 +97,16 @@ class DocumentTableViewController: UITableViewController {
             }
         }
         return documentListBundle  // Retourne la liste des fichiers
+    }
+}
+
+extension DocumentTableViewController: QLPreviewControllerDataSource {
+    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+        return documents.count
+    }
+    
+    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+        let document = documents[index]
+        return document.url as QLPreviewItem
     }
 }
